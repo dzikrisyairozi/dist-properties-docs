@@ -1,23 +1,8 @@
 {
   "index": "Introduction",
-  "-- Distributed Computing with Ray": {
-    "type": "separator",
-    "title": "Distributed Computing with Ray"
-  },
-  "-- Remote Function": {
-    "type": "separator",
-    "title": "Remote Function"
-  },
-  "-- Stateful Distributed Computing": {
-    "type": "separator",
-    "title": "Stateful Distributed Computing"
-  },
-  "-- Autoscaling Machine Learning APIs": {
-    "type": "separator",
-    "title": "Autoscaling Machine Learning APIs"
-  },
-  "-- Comparison with Spark": {
-    "type": "separator",
-    "title": "Comparison with Spark"
-  }
+  "distributed-computing": "Distributed Computing with Ray",
+  "remote-function": "Remote Function",
+  "stateful-distributed-computing":"Stateful Distributed Computing",
+  "autoscaling-ml-apis":"Autoscaling Machine Learning APIs",
+  "comparison-with-spark": "Comparison with Spark"
 }
