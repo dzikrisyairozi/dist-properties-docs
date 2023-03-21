@@ -1,0 +1,54 @@
+# Spark vs Ray Code Examples
+
+### Spark                                                     
+
+```py
+text_file = spark.textFile("hdfs://...")
+text_file.flatMap(lambda line: line.split())
+ .map(lambda word: (word, 1))
+ .reduceByKey(lambda a, b: a+b)
+```
+
+### Ray                                                    
+
+```py
+@ray.remote
+def f(x)
+    return x * x 
+futures = [f.remote(i) for i in range(4)]
+print(ray.get(futures)) # [0, 1, 4, 9]
+```
+
+--------------------------------------------
+
+### Spark                                                     
+
+```py
+# Set parameters for the algorithm.
+# Here, we limit the number of iterations to 10.
+lr = LogisticRegression(maxIter=10)
+# Fit the model to the data.
+model = lr.fit(df)
+# Given a dataset, predict each point's label.
+model.transform(df).show()
+```
+
+### Ray                                                    
+
+```py
+@ray.remote
+class DataWorker(object):
+ def __init__(self):
+    self.model = ConvNet()
+    self.data_iterator = iter(get_data_loader()[0])
+ def compute_gradients(self, weights):
+    self.model.set_weights(weights)
+    data, target = next(self.data_iterator)
+    self.model.zero_grad()
+    output = self.model(data)
+    loss = F.nll_loss(output, target)
+    loss.backward()
+    return self.model.get_gradients()
+```
+
+
