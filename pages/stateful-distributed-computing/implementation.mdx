@@ -1,0 +1,146 @@
+# Python Example
+
+```py
+!pip install faker
+```
+
+```py
+@ray.remote
+class Child(object):
+    def __init__(self):
+        from faker import Faker
+        self.name = Faker().name()
+        self.age = 1
+        
+    def grow(self):
+        self.age += 1
+        return self.age
+    
+    def greet(self):
+        return (
+            f'My name is {self.name} '
+            f'and I am {self.age} years old'
+        )
+```
+
+```py
+child = Child()
+```
+```py
+child.name
+```
+
+> ```py
+> Dzikri Syairozi
+> ```
+
+```py
+children = [Child.remote() for i in range(10)]
+```
+
+```py
+children
+```
+
+> ```py
+> [Actor(Child,3db7cfef01000000),
+>  Actor(Child,a628090a01000000),
+>  Actor(Child,fafba2ba01000000),
+>  Actor(Child,b7603b6c01000000),
+>  Actor(Child,a491754501000000),
+>  Actor(Child,84b65a9401000000),
+>  Actor(Child,87b4f72601000000),
+>  Actor(Child,be3cb80901000000),
+>  Actor(Child,bd5c534001000000),
+>  Actor(Child,7f10737001000000)]
+> ```
+
+```py
+futures = [ c.greet.remote() for c in children ]
+```
+
+```py
+futures
+```
+
+> ```py
+> [ObjectRef(b19fee1fe487d3333db7cfef0100000001000000),
+>  ObjectRef(af23404c2bbc23f5a628090a0100000001000000),
+>  ObjectRef(99506fd459680ea2fafba2ba0100000001000000),
+>  ObjectRef(c61c90f84b215448b7603b6c0100000001000000),
+>  ObjectRef(11d7f983e14011f4a49175450100000001000000),
+>  ObjectRef(7d269126652173d084b65a940100000001000000),
+>  ObjectRef(a16678a371591cc487b4f7260100000001000000),
+>  ObjectRef(82be70daa7562412be3cb8090100000001000000),
+>  ObjectRef(d24da3c30343f5b0bd5c53400100000001000000),
+>  ObjectRef(335d6f0817bbad8f7f1073700100000001000000)]
+> ```
+
+```py
+for future in ray.get(futures):
+    print(future)
+```
+
+> ```py
+> My name is Brenda Wilson and I am 1 years old
+> My name is Barbara Morgan and I am 1 years old
+> My name is Christina Santos and I am 1 years old
+> My name is Eddie Moran and I am 1 years old
+> My name is Kevin Robinson and I am 1 years old
+> My name is Tony Myers and I am 1 years old
+> My name is Diane Clark and I am 1 years old
+> My name is Cindy Dawson and I am 1 years old
+> My name is George Leonard and I am 1 years old
+> My name is Teresa Mendoza and I am 1 years old
+> ```
+
+```py
+for c in children:
+    for _ in range(random.randint(1,10)):
+        c.grow.remote()
+```
+
+```py
+for future in ray.get([ c.greet.remote() for c in children ]):
+    print(future)
+```
+
+> ```py
+> My name is Brenda Wilson and I am 9 years old
+> My name is Barbara Morgan and I am 10 years old
+> My name is Christina Santos and I am 6 years old
+> My name is Eddie Moran and I am 9 years old
+> My name is Kevin Robinson and I am 8 years old
+> My name is Tony Myers and I am 7 years old
+> My name is Diane Clark and I am 5 years old
+> My name is Cindy Dawson and I am 2 years old
+> My name is George Leonard and I am 6 years old
+> My name is Teresa Mendoza and I am 11 years old
+> ```
+
+```py
+c = children[0]
+```
+
+```py
+ray.get([c.grow.remote() for _ in range(5)])
+```
+
+> ```py
+> [10, 11, 12, 13, 14]
+> ```
+
+```py
+# actors stay around as long as they are in scope
+# since nothing really goes out of scope in a notebook
+# we have to manually terminate them
+[ ray.kill(person) for person in children ]
+```
+
+> ```py
+> [None, None, None, None, None, None, None, None, None, None]
+> ```
+
+```py
+ray.shutdown()
+```
