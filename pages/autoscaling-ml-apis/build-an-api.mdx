@@ -1,0 +1,52 @@
+# Building an API with Ray Serve
+
+```py
+import ray, pickle
+from ray import serve
+
+ray.init(address='auto')
+```
+
+> ```py
+> {'node_ip_address': '172.17.0.2',
+> 'raylet_ip_address': '172.17.0.2',
+> 'redis_address': '172.17.0.2:6379',
+> 'object_store_address': '/tmp/ray/session_2021-02-19_01-41-08_832187_7103/sockets/plasma_store',
+> 'raylet_socket_name': '/tmp/ray/session_2021-02-19_01-41-08_832187_7103/sockets/raylet',
+> 'webui_url': '127.0.0.1:8265',
+> 'session_dir': '/tmp/ray/session_2021-02-19_01-41-08_832187_7103',
+> 'metrics_export_port': 61712,
+> 'node_id': 'a387201aa5e27ea4052ebbab7cb1ca6ecfff19ce'}
+> ```
+
+```py
+def predict(request):
+    return "Hello!"
+```
+
+```py
+client = serve.start()
+```
+
+```py
+client.create_backend('model', predict)
+```
+
+```py
+client.create_endpoint('new_predict', backend="model", route="/predict")
+```
+
+```py
+request.get('http://localhost:8000/predict')
+```
+> ```py
+> <Response [200]>
+> ```
+
+```py
+res.text
+```
+> ```py
+> 'Hello!'
+> ```
+
